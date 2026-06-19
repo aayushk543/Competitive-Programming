@@ -20,10 +20,11 @@ int main() {
             arr[x] = i+1;
         }
 
-        for(int i = 0; i <= 2*n; i++){
+        for(int i = 1; i <= 2*n; i++){
+            if(i * i > 2*n - 1) break;
             if(arr[i] != -1) {
                 
-                for(int j = i; j <= 2*n; j++){
+                for(int j = i+1; j <= 2*n && i * j <= 2*n - 1; j++){
                     if(arr[j] == -1) continue;
                     else if(arr[i]  +  arr[j] == i * j) count++;
                 }

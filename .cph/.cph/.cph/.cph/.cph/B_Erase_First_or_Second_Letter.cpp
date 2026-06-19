@@ -2,21 +2,28 @@
 using namespace std;
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
     int t;
-    scanf("%d", &t);
+    cin >> t;
+
     while (t--) {
         int n;
-        scanf("%d", &n);
-        static char buf[100005];
-        scanf("%s", buf);
+        string s;
 
-        bool seen[26] = {false};
-        long long cnt = 0, ans = 0;
-        for (int i = 0; i < n; i++) {
-            int c = buf[i] - 'a';
-            if (!seen[c]) { seen[c] = true; cnt++; }
-            ans += cnt;
+        cin >> n >> s;
+
+        set<char> st;
+        long long ans = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            st.insert(s[i]);
+            ans += st.size();
         }
-        printf("%lld\n", ans);
+
+        cout << ans << '\n';
     }
+
+    return 0;
 }
