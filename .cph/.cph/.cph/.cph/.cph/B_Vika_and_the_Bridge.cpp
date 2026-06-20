@@ -1,6 +1,43 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+int check(vector<int>& vec, int m){
+    int n = vec.size();
+    
+    vector<vector<int>> diff(m + 1, vector<int>(3, -1));
+
+    int ans = INT_MAX;
+
+    for(int i = 0; i < n; i++){
+        if(diff[vec[i]][2] == -1){
+            diff[vec[i]][0] = i;
+        }
+        else if(diff[vec[i]][0] <= i - diff[vec[i]][2] - 1){
+            diff[vec[i]][1] = diff[vec[i]][0];
+            diff[vec[i]][0] = i - diff[vec[i]][2] - 1; 
+        }
+        else if(diff[vec[i]][1] <= i - diff[vec[i]][2] - 1){
+            diff[vec[i]][1] = i - diff[vec[i]][2] - 1; 
+        }
+
+        diff[vec[i]][2] = i;
+    }
+
+    for(int i = 1; i <= m; i++){
+        if(diff[i][0] <= n - diff[i][2] - 1){
+            diff[i][1] = diff[i][0];
+            diff[i][0] = n - diff[i][2] - 1; 
+        }
+        else if(diff[i][1] <= n - diff[i][2] - 1){
+            diff[i][1] = n - diff[i][2] - 1; 
+        }
+
+        ans = min(ans, max(diff[i][0]/2, diff[i][1]));
+    }
+
+    return ans;
+}
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -8,50 +45,18 @@ int main() {
     int t;
     cin >> t;
     while(t--) {
-        int n,k;
+        int n, k;
         cin >> n >> k;
-        
-        vector<int> planc(n,0);
 
-        vector<pair<pair<int, int>, int>> arr(k, {{1,0}, 0});
+        vector<int> paint(n);
 
-        for(int i = 0; i < n; i++){
-            cin >> planc[i];
-        }
+        int min_diff = INT_MAX;
 
-        int ans = INT_MAX;
+        for(int i = 0; i < n; i++) cin >> paint[i];
 
-        for(int i = 0; i < n; i++){
-            if(arr[planc[i] - 1].first.second == 0){
-                arr[planc[i] - 1].first.second = i + 1;
-            }
-            else if(arr[planc[i] - 1].second == 0){
-                arr[planc[i] - 1].second = i + 1;
-            }
-            else if(i + 1 - (arr[planc[i] - 1].second) > (arr[planc[i] - 1].first.second - arr[planc[i] - 1].first.first)) {
-                arr[planc[i] - 1].first.first = arr[planc[i] - 1].second;
-                arr[planc[i] - 1].second = i + 1;
-                arr[planc[i] - 1].first.second = i + 1;
-            }
-            else {
-                arr[planc[i] - 1].second = i + 1;
-            }
+        int ans = check(paint, k);
 
-            if(i == n - 1){
-            for(int j = 0; j < k; j++){
-                if(arr[j].second == 0){
-                    if(arr[j].first.second == 0){
-                        ans = min(ans, max(arr[j].first.first,n - arr[j].first.first));
-                    }
-                    else ans = min(ans, max(n - arr[j].first.second, arr[j].first.second - arr[j].first.first));
-                }
-                else ans = min(ans, max(n - arr[j].second, arr[j].first.second - arr[j].first.first));
-            }
-        }
-        }
-
-        
-        cout << (ans-1)/2 << '\n';
+        cout << ans << '\n';
     }
     return 0;
 }
