@@ -34,7 +34,7 @@ int main() {
         st.insert({x2+b,y2-a});
         st.insert({x2-b,y2+a});
 
-        if(a == b) cout << (16 - st.size())/2 << '\n';
+        if(a == b) cout << (8 - st.size()) << '\n';
         else cout << 16 - st.size() << '\n';
     }
     return 0;

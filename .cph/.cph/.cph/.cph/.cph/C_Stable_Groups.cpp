@@ -19,14 +19,26 @@ int main() {
     sort(arr.begin(), arr.end());
 
     int count = 0;
+    vector<long long> vp;
 
     for(int i = 1; i < n; i++){
         if(k == 0 && arr[i] - arr[i-1] > x) count++;
         else if(k > 0 && arr[i] - arr[i-1] > x) {
-            if(ceil(((double)arr[i] - (double)arr[i-1])/2.00) <= x) k--;
-            else count++;
+            long long diff = arr[i] - arr[i-1] - 1; 
+            count++;
+            vp.push_back(diff);
         }
     }
+    
+
+    sort(vp.begin(), vp.end());
+    for(int i = 0; i < vp.size() && k > 0; i++){
+        if((vp[i]/x) <= k) {
+            k -= (vp[i]/x);
+            count--;
+        }
+        else break;
+    }    
 
     cout << count + 1 << '\n';
 }
