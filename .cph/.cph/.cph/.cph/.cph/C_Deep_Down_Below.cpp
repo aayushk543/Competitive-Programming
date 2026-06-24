@@ -1,11 +1,22 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-bool check(vector<vector<long long>>& arr, long long level){
+bool check(vector<long long>& arr, long long level){
     int n = arr.size();
 
     for(int i = 0; i < n; i++){
-        if(level > arr[i][0]) level += arr[i][1];
+        if(arr[i] < level) level++;
+        else return false;
+    }
+
+    return true;
+}
+
+bool check2(vector<pair<long long, int>>& arr, long long level){
+    int n = arr.size();
+
+    for(int i = 0; i < n; i++){
+        if(arr[i].first <= level) level += arr[i].second;
         else return false;
     }
 
@@ -22,43 +33,55 @@ int main() {
        int n;
        cin >> n;
 
-       vector<vector<long long>> arr(n, vector<long long>(2, 0));
-       long long l = 100;
-       long long r = 0;
-       
+       vector<pair<long long,int>> vp;
 
        for(int i = 0; i < n; i++){
+        int k;
+        cin >> k;
 
-        cin >> arr[i][1];
-        long long maxi = LLONG_MIN;
+        // vector<long long> arr(k);
+        // long long mini = LLONG_MAX;
+        // long long maxi = LLONG_MIN;
+        long long ans = INT_MIN;
 
-        for(int j = 0; j < arr[i][1]; j++) {
+        for(int j = 0; j < k; j++) {
             long long m;
-            
             cin >> m;
-            maxi = max(maxi, m);
+            ans = max(ans, m - j);
         }
-        arr[i][0] = maxi;
-        l = min(maxi, l);
-        r = max(maxi, r);
+
+        // while(mini < maxi) {
+        //     long long mid = (maxi+mini)/2;
+
+        //     if(check(arr,mid) == false) mini = mid+1;
+        //     else maxi = mid-1;
+        // }
+
+        vp.push_back({ans, k});
+
        }
 
-       sort(arr.begin(), arr.end());
+       sort(vp.begin(), vp.end());
 
-       r += 1;
-       long long ans = r;
+    //    long long l = vp[0].first;
+    //    long long r = vp[vp.size()-1].first;
 
-       while(l <= r){
-        long long mid = (l+r)/2;
+    //    while(l <= r){
+    //     long long mid = (l+r)/2;
 
-        if(check(arr,mid)) {
-            r = mid - 1;
-            ans = min(ans, mid);
-        }
-        else l = mid+1;
-       }
+    //     if(check2(vp, mid) == false) l = mid+1;
+    //     else r = mid-1;
+    //    }
 
-       cout << ans << '\n';
+    long long ans = vp[0].first;
+    long long sum = vp[0].second;
+
+    for(int i = 1; i < n; i++){
+        ans = max(ans, vp[i].first - sum);
+        sum += vp[i].second;
+    }
+
+       cout << ans + 1 << '\n';
 
 
     }
