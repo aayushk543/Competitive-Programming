@@ -12,32 +12,29 @@ int main() {
        cin >> n;
 
        vector<int> v(n);
-       int sum = 0, max_sum = 0;
+       int sum = 0;
+
+       vector<int> dp(n);
 
        for(int i = 0; i < n; i++) {
         cin >> v[i];
-        max_sum = max(max_sum, v[i]);
+        dp[i] = v[i];
        }
 
-       int i = 1;
-       sum = max(v[0],0);
+       int ans = dp[n-1];
 
-       while(i < n){
-            while(i < n && abs(v[i-1]) % 2 != abs(v[i]) % 2){
-                
-                sum += v[i];
-                
-                max_sum = max(sum, max_sum);
-
-                if(sum < 0) sum = 0;
-                i++;
-            }
-            while(i < n && abs(v[i-1]) % 2 == abs(v[i]) % 2) i++;
-            if(i < n) sum = v[i-1];
+       for(int i = n - 1; i >= 0; i--){ 
+        int max_sum = dp[i];
+        
+        if(i + 1 < n && ((abs(v[i+1]) % 2 == 0 && abs(v[i]) % 2 == 1)|| (abs(v[i+1]) % 2 == 1 && abs(v[i]) % 2 == 0))) dp[i] = max(max_sum, max_sum + dp[i+1]);
+        //if(i == 3) cout << ans << '\n'; 
+        ans = max(ans, dp[i]);
+        //if(i == 3) cout << ans << '\n'; 
        }
 
-       if(v.size() == 1) cout << v[0] << '\n';
-       else cout << max(max_sum, sum) << '\n';
+       //for(int i = 0; i < n; i++) cout << dp[i] << '\n';
+
+       cout << ans << '\n';
     }
     return 0;
 }
