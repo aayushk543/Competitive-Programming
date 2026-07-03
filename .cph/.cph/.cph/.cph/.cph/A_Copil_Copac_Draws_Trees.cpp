@@ -14,6 +14,12 @@ void dfs(vector<vector<int>>& adj, vector<bool>& vis, int index, vector<int>& co
     }
 }
 
+int find_parent(int index, vector<int>& parent) {
+    if(index != parent[index]) return parent[index] = find_parent(parent[index], parent);
+
+    return index;
+}
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -26,10 +32,15 @@ int main() {
 
         vector<vector<int>> adj(n + 1, vector<int>());
         vector<bool> vis(n + 1, false);
-        vector<int> count(n + 1, 0);
+        vector<int> size(n + 1, 1);
 
         vis[1] = true;
-        count[1] = 1;
+
+        int ans = 0;
+
+        vector<int> parent(n + 1);
+
+        for(int i = 1; i <= n; i++) parent[i] = i;
         
 
         for(int i = 1; i < n; i++) {
@@ -40,39 +51,43 @@ int main() {
             adj[b].push_back(a);
 
             if(vis[a]) {
-                
                 vis[b] = true;
-                count[b] = count[a];
-
-                //cout << a << " " << count[a] << '\n';
-
-                for(int i = 0; i < adj[b].size(); i++) {
-                    if(vis[adj[b][i]] == false) dfs(adj, vis, adj[b][i], count, count[a] + 1);
-                }
-                
+                if(a != 1) ans += size[b];
             }
             else if(vis[b]) {
-
                 vis[a] = true;
-                count[a] = count[b];
+                if(b != 1) ans += size[a];
+            }
+            else if(!vis[a] && !vis[b]) {
+                int parent1 = find_parent(a, parent);
+                int parent2 = find_parent(b, parent);
 
-                for(int i = 0; i < adj[a].size(); i++) {
-                    if(vis[adj[a][i]] == false) dfs(adj, vis, adj[a][i], count, count[b] + 1);
+                int size1 = size[parent1];
+                int size2 = size[parent2];
+
+                if(parent1 == parent2) continue;
+
+                if(size1 > size2) {
+                    parent[parent1] = parent2;
+                    size[parent2] += size1;
                 }
-
+                else {
+                    parent[parent2] = parent1;
+                    size[parent1] += size2; 
+                }
             }
 
             
         }
 
-        for(int i = 1; i <= n; i++)
-        cout << count[i] << '\n';
+        // for(int i = 1; i <= n; i++)
+        // cout << count[i] << '\n';
 
-        int ans = 1;
+        
 
-        for(int i = 1; i <= n; i++) ans = max(ans, count[i]);
+        
 
-        //cout << ans << '\n';
+        cout << ans << '\n';
     }
     return 0;
 }
