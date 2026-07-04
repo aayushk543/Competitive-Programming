@@ -26,26 +26,40 @@ int main() {
 
        long long prefix_sum = 0;
 
+       int k = 0;
+
        for(int i = 0; i < n; i++){
-            prefix_sum += v2[i].first;
+            // prefix_sum += v2[i].first;
 
-            int k = i;
-            long long prefix_sum2 = 0;
+            // int k = i;
+            // long long prefix_sum2 = 0;
 
-            if(k < n-1 && v2[k].first == v2[k+1].first) prefix_sum2 = prefix_sum;
+            // if(k < n-1 && v2[k].first == v2[k+1].first) prefix_sum2 = prefix_sum;
 
-            while(k < n-1 && v2[k].first == v2[k+1].first) {
-                prefix_sum2 += v2[k+1].first;
+            // while(k < n-1 && v2[k].first == v2[k+1].first) {
+            //     prefix_sum2 += v2[k+1].first;
+            //     k++;
+            // }
+
+            // auto it = upper_bound(v2.begin(), v2.end(), make_pair(max(prefix_sum,prefix_sum2), INT_MAX));
+
+            // //prefix_sum2 = 0;
+
+            // int index = (it - v2.begin()) - 1;
+
+            // ans[v2[i].second] = index; 
+
+            if(i == k) {
+                prefix_sum += v2[i].first;
                 k++;
             }
 
-            auto it = upper_bound(v2.begin(), v2.end(), make_pair(max(prefix_sum,prefix_sum2), INT_MAX));
+            while(k < n && prefix_sum >= v2[k].first) {
+                prefix_sum += v2[k].first;
+                k++;
+            }
 
-            prefix_sum2 = 0;
-
-            int index = (it - v2.begin()) - 1;
-
-            ans[v2[i].second] = index; 
+            ans[v2[i].second] = k - 1;
        }
 
        for(int i = 0; i < n; i++) cout << ans[i] << " ";

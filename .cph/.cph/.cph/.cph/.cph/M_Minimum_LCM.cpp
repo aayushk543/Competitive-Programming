@@ -12,22 +12,24 @@ int main() {
         ll n;
         cin >> n;
 
-        ll ans1, ans2;
-
-        if(n % 2 == 0){
-            ans1 = n/2;
-            ans2 = n/2;
-        }
-        else if(n % 3 == 0) {
-            ans1 = n/3;
-            ans2 = 2*ans1;
-        }
+        if(n % 2 == 0) cout << n/2 << " " << n/2 << '\n';
         else {
-            ans1 = 1;
-            ans2 = n - 1;
+            long long last = -1;
+            for(long long i = 3; i * i <= n; i+=2) {
+                if(n % i == 0) {
+                    last = i;
+                    break;
+                }
+            }
+
+            if(last == -1) last = 1;
+            else {
+                last = n / last;
+            }
+
+            cout << last << " " << n - last << '\n';
         }
 
-        cout << ans1 << " " << ans2 << '\n';
     }
     return 0;
 }
