@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <climits>
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int t;
+    cin >> t;
+    while(t--) {
+        int n;
+        cin >> n;
+
+        unordered_map <int, vector<long long>> mp;
+
+        vector<int> a1(n);
+        vector<long long> a2(n);
+
+        for(int i = 0; i < n; i++) {
+            cin >> a1[i];
+        }
+
+        for(int i = 0; i < n; i++) cin >> a2[i];
+
+        for(int i = 0; i < n; i++) {
+            mp[a1[i]].push_back(a2[i]);
+        }
+
+        for(auto it = mp.begin(); it != mp.end(); it++) {
+            auto &t1 = it->second;
+
+            sort(t1.begin(), t1.end());
+
+            long long pref = t1[0];
+
+            for(int i = 1; i < t1.size(); i++) {
+                t1[i] += pref;
+                pref += t1[i];
+            }
+        }
+
+        for(int i = 1; i <= n; i++) {
+            long long ans = 0;
+
+            for(auto it = mp.begin(); it != mp.end(); it++) {
+                auto &vec = it->second;
+
+                int size = vec.size();
+
+                int curr = (size % (i));
+
+                ans += vec[size-1];
+
+                if(curr != 0) ans -= vec[curr - 1];
+            }
+
+            cout << ans << " ";
+        }
+
+        cout << '\n';
+
+        
+    }
+    return 0;
+}   
