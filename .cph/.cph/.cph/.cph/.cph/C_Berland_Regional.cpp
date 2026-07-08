@@ -29,6 +29,8 @@ int main() {
             mp[a1[i]].push_back(a2[i]);
         }
 
+        vector<long long> ans(n + 1, 0);
+
         for(auto it = mp.begin(); it != mp.end(); it++) {
             auto &t1 = it->second;
 
@@ -36,29 +38,26 @@ int main() {
 
             long long pref = t1[0];
 
+
             for(int i = 1; i < t1.size(); i++) {
                 t1[i] += pref;
-                pref += t1[i];
-            }
-        }
-
-        for(int i = 1; i <= n; i++) {
-            long long ans = 0;
-
-            for(auto it = mp.begin(); it != mp.end(); it++) {
-                auto &vec = it->second;
-
-                int size = vec.size();
-
-                int curr = (size % (i));
-
-                ans += vec[size-1];
-
-                if(curr != 0) ans -= vec[curr - 1];
+                pref = t1[i];
             }
 
-            cout << ans << " ";
+            int size = t1.size();
+
+            for(int i = 1; i <= size; i++) {
+                
+                int curr = (size % i);
+
+                ans[i] += t1[size-1];
+
+                if(curr != 0) ans[i] -= t1[curr - 1];
+            }
+
         }
+
+        for(int i = 1; i <= n; i++) cout << ans[i] << " ";
 
         cout << '\n';
 
