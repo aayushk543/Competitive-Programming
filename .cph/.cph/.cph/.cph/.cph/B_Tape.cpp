@@ -11,55 +11,30 @@ int main() {
         long long n,m,k;
         cin >> n >> m >> k;
 
-        priority_queue <pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> pq;
-
         long long first;
         cin >> first;
+        vector<long long> vis;
+
+        long long one = first;
+        long long last;
 
         for(int i = 1; i < n; i++) {
             long long second;
             cin >> second;
 
-            pq.push({second - first + 1, i - 1});
+            if(i == n - 1) last = second;
+
+            vis.push_back(second - first - 1);
             first = second;
         }
 
-        vector<long long> vis(n, 0);
-        long long ans = 0;
-        int count = n;
+        long long ans = last - one + 1;
+        sort(vis.begin(), vis.end(), greater<int>());
 
-        while(!pq.empty() && count > k) {
-            int index = pq.top().second;
-            vis[index] = pq.top().first;
-            vis[index+1] = pq.top().first;
-
-            if(index > 0 && vis[index - 1] != 0 && index < n - 2 && vis[index + 1] != 0) {
-                // ans += (pq.top().first - 2);
-                count++;
-            }
-            else if(index > 0 && vis[index - 1] != 0) {
-                ans += (pq.top().first - 1);
-            }
-            else if(index < n - 2 && vis[index + 1] != 0) {
-                ans += (pq.top().first - 1);
-            }
-            else {
-                ans += pq.top().first;
-            }
-
-            pq.pop();
-            count--;
-
-
+        for(int i = 0; i < k - 1; i++) {
+            ans -= vis[i];
         }
-
-        int mark = 0;
-
-        for(int i = 0; i < n-1; i++) {
-            if(vis[i] != 0) mark++;
-        }
-
-        ans += n - 1 - mark;
+        
 
         cout << ans << '\n';
     return 0;

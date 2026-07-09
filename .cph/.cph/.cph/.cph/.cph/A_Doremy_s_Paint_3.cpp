@@ -12,30 +12,34 @@ int main() {
         int n;
         cin >> n;
 
-        vector<int> arr(n);
+        int m1 = -1, m2 = -1;
+        int count1 = 0, count2 = 0;
+        bool flag = false;
 
-        for(int i = 0; i < n; i++){
-            cin >> arr[i];
-        }
+        for(int i = 0; i < n; i++) {
+            int curr;
+            cin >> curr;
 
-        sort(arr.begin(), arr.end());
-
-        if(n <= 2) cout << "Yes" << '\n';
-        else if(n == 3){
-            if(arr[0] == arr[1] || arr[1] == arr[2]) cout << "Yes" << '\n';
-            else cout << "No" << '\n';
-        }
-        else {
-            for(int i = 0; i < n - 1; i++){
-                if(arr[i] != arr[i+1]) {
-                    cout << "No" << '\n';
-                    break;
-                }
-                else if(i == n - 2) {
-                    cout << "Yes" << '\n';
-                }
+            if(m1 == -1 || m1 == curr) {
+                m1 = curr;
+                count1++;
             }
+            else if(m2 == -1 || m2 == curr) {
+                m2 = curr;
+                count2++;
+            }
+            else flag = true;
         }
+
+        if(count1 < count2) swap(count1, count2);
+
+        if(flag) cout << "No" << '\n';
+        else if(m2 == -1) cout << "Yes" << '\n';
+        else if(n % 2 && count1 - 1 == count2) cout << "Yes" << '\n';
+        else if(n % 2 == 0 && count1 == count2) cout << "Yes" << '\n';
+        else cout << "No" << '\n'; 
+
+
     }
 
     return 0;
