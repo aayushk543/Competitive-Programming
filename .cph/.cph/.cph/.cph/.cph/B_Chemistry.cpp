@@ -14,7 +14,20 @@ int main() {
         string s;
         cin >> s;
 
-        vector<> s1
+        map<char, int> mp;
+
+        for(int i = 0; i < n; i++) {
+            mp[s[i]]++;
+        }
+
+        int count = 0;
+
+        for(auto it = mp.begin(); it != mp.end(); it++) {
+            if(it->second % 2) count++;
+        }
+
+        if(count - 1 > k) cout << "NO" << '\n';
+        else cout << "YES" << '\n';
     }
     return 0;
 }

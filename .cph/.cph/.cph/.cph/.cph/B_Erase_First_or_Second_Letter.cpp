@@ -17,9 +17,9 @@ int main() {
         set<char> st;
         long long ans = 0;
 
-        for (int i = n - 1; i >= 0; i--) {
+        for (int i = 0; i < n; i++) {
+            if(st.find(s[i]) == st.end()) ans += n - i;
             st.insert(s[i]);
-            ans += st.size();
         }
 
         cout << ans << '\n';

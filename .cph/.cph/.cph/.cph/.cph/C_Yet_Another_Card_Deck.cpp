@@ -8,12 +8,14 @@ int main() {
         int n,q;
         cin >> n >> q;
 
-        map<int, deque<int>> md;
+        map<int, pair<int, int>> mp;
 
         for(int i = 0; i < n; i++){
             int num;
             cin >> num;
-            md[num].push_back(i);
+            if(mp.find(num) == mp.end()) {
+                mp[num] = {i+1, 1};
+            }
         }
 
 
@@ -22,10 +24,10 @@ int main() {
             int curr;
             cin >> curr;
 
-            cout << md[curr][0] + i << " ";
-            int out = md[curr][0];
-            md[curr].pop_front();
-            md[curr].push_front(1);
+            auto [index, timestamp] = mp[curr];
+
+            cout << index + (i - timestamp) << " ";
+            mp[curr] = {0, i};
         }
 
         cout << '\n';
