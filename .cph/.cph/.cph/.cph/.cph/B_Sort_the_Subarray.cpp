@@ -13,42 +13,41 @@ int main() {
        int n;
        cin >> n;
 
-       vector<int> a1(n);
-       vector<int> a2(n);
+       vector<int> a1(n + 1);
+       vector<int> a2(n + 1);
 
-       for(int i = 0; i < n; i++) cin >> a1[i];
-       for(int i = 0; i < n; i++) {
+       int l = -1;
+       int r = -1;
+
+       int maxi = INT_MIN;
+       int mini = INT_MAX;
+
+       for(int i = 1; i <= n; i++) cin >> a1[i];
+       for(int i = 1; i <= n; i++) {
         cin >> a2[i];
-       }
 
-       vector<int> ans(2, -1);
-       int max_len = -1;
-
-       for(int i = 1; i < n; i++){
-        if(a2[i-1] <= a2[i]){
-            int l = i-1;
-            int r = i-1;
-
-            bool c = true;
-
-            while(r < n-1 && a2[r] <= a2[r+1]) {
-                r++;
-                c = (a2[r] == a1[r]);
-            }
-
-            if(c == false && max_len < r - l + 1) {
-                max_len = r - l + 1;
-                ans[0] = l;
-                ans[1] = r+1;
-            }
-            i = r+1;
+        if(a1[i] != a2[i] && l == -1) {
+            l = i;
+            mini = a2[i];
         }
+            else if(a1[i] != a2[i] && l != -1) {
+            r = i;
+            maxi = a2[i];
+        }
+
        }
 
-       cout << ans[0] + 1 << " " << ans[1] << '\n';
+       if(l == -1 && r == -1) {
+        cout << 1 << " " << n << '\n';
+        continue;
+       }
+       else if(r == -1) r = n;
 
+       while(l > 1 && a2[l-1] <= mini) l--;
+       while(r < n && a2[r+1] >= maxi) r++;
 
-
+       cout << l << " " << r << '\n';
+       
     }
     return 0;
 }
