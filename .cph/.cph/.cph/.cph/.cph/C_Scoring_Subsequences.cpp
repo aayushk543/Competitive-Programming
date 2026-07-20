@@ -11,17 +11,23 @@ int main() {
        int n;
        cin >> n;
 
-       vector<int> arr(n);
-       for(int i = 0; i < n; i++) cin >> arr[i];
+       vector<int> arr(n+1);
+       for(int i = 1; i <= n; i++) cin >> arr[i];
 
-       int length = 0;
+       vector<int> ans(n + 1);
+       int j = 1;
+       int mini = arr[j];
 
-       for(int i = 0; i < n; i++){
-        if(arr[i] > length + 1 || (arr[i] == length + 1)) length += 1;
-
-        cout << max(length, 1) << " ";
+       for(int i = 1; i <= n; i++)  {
+        while(mini < i - j + 1) {
+            j++;
+            mini = arr[j];
+        }
+        
+        ans[i] = i - j + 1;
        }
 
+       for(int i = 1; i <= n; i++) cout << ans[i] << " ";
        cout << '\n';
     }
     return 0;
