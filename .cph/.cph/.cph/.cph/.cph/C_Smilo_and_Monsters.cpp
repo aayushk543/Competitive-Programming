@@ -22,36 +22,23 @@ int main() {
         long long ans = 0;
         long long count = 0;
 
-        while(i <= j) {
+        while(i < j) {
             
-            while(i < j && arr[j] > count) {
-                count += arr[i++];
-            }
-
-
-            if(i == j) {
-                
-                if(count > 0 && arr[j] > count) {
-                    arr[j] -= count;
-                    ans += count + 1;
-                }
-                else {
-                    ans += count + 1;
-                    arr[j] = 0;
-                }
-
-                if(arr[j] <= 3) ans += arr[j];
-                else ans += ceil(arr[j] / 2.00);
-                break;
-            }
-
-            if(arr[j] <= count) {
+            if(arr[i] + count > arr[j]) {
+    
                 ans += arr[j] + 1;
-                count -= arr[j];
+                count = count + arr[i] - arr[j];
                 j--;
-            }
+                i++;
 
+            }
+            else count += arr[i++];
         }
+
+        if(i == j) ans += max(count, arr[i]) + 1;
+
+
+
 
         cout << ans << '\n';
     }
