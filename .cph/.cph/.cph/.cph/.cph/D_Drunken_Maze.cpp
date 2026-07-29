@@ -2,169 +2,166 @@
 using namespace std;
 
 int start_x, start_y;
-int end_x, end_y;
-int n,m;
-vector<vector<vector<long long>>> dp;
+int end_x, end_y; 
 
-void dfs(vector<vector<int>>& adj) {
-    priority_queue<tuple<int,int,int,int,int>, vector<tuple<int,int,int,int,int>>, greater<tuple<int,int,int,int,int>>> pq;
+int ans = INT_MAX;
+void bfs(vector<vector<char>>& adj) {
+    int n = adj.size();
+    int m = adj[0].size();
 
-    pq.push({0, start_x, start_y, 1, -1});
-    pq.push({0, start_x, start_y, 2, -1});
-    pq.push({0, start_x, start_y, 3, -1});
-    pq.push({0, start_x, start_y, 4, -1});
-    dp[start_x][start_y][1] = -1;
-    dp[start_x][start_y][2] = -1;
-    dp[start_x][start_y][3] = -1;
-    dp[start_x][start_y][4] = -1;
+    queue<tuple<int,int,int,int,int>> q;
 
-    while(!pq.empty()) {
-        auto [dist, x, y, direc, curr] = pq.top();
-        pq.pop();
+    vector<vector<vector<vector<int>>>> vis(n + 1, vector<vector<vector<int>>>(m + 1, vector<vector<int>>(4, vector<int>(4, INT_MAX))));
+    q.push({0, start_x, start_y, 0, 0});
+    
+    vis[start_x][start_y][0][0] = 0;
+    
+
+    while(!q.empty()) {
+        auto [dist, x, y, direc, count] = q.front();
+        q.pop();
+
+        if(vis[x][y][direc][count] != dist) continue;
+
+        if(direc == 0) {
+
+            if(x < n && adj[x+1][y] != '#' && count < 3 && vis[x+1][y][0][count + 1] > dist + 1) {
+                vis[x+1][y][0][count + 1] = dist + 1;
+                q.push({dist + 1, x + 1, y, 0, count + 1});
+            }
+            
+            if(x > 1 && adj[x-1][y] != '#' && x > 1 && vis[x-1][y][1][1] > 1 + dist) {
+                vis[x-1][y][1][1] = dist + 1;
+                q.push({dist + 1,x - 1, y, 1, 1});
+            }
+
+            if(y < m && adj[x][y+1] != '#' && vis[x][y+1][2][1] > dist + 1) {
+                vis[x][y+1][2][1] = dist + 1;
+                q.push({dist + 1, x, y + 1, 2, 1});
+            }
+
+            if(y > 1 && adj[x][y-1] != '#' && vis[x][y-1][3][1] > dist + 1) {
+                vis[x][y-1][3][1] = dist + 1;
+                q.push({dist + 1, x, y-1, 3, 1});
+            }
+
+        }
 
         if(direc == 1) {
+
+            if(x > 1 && adj[x-1][y] != '#' && count < 3 && x > 1 && vis[x-1][y][1][count + 1] > dist + 1) {
+                vis[x-1][y][1][count + 1] = dist + 1;
+                q.push({dist + 1, x - 1, y, 1, count + 1});
+            }
             
-            if(x > 0 && curr == 3 && dp[x-1][y][direc] > dist + 3 && adj[x-1][y] != -1) {
-                dp[x-1][y][direc] = dist + 3;
-                pq.push({dp[x-1][y][direc], x-1, y, 1, 3});
-            } 
-            else if(x > 0 && dp[x-1][y][direc] > dist + 1 && adj[x-1][y] != -1) {
-                dp[x-1][y][direc] = dist + 1;
-                pq.push({dp[x-1][y][direc], x - 1, y, 1, curr + 1});
+            if(x < n && adj[x+1][y] != '#' && x < n && vis[x+1][y][0][1] > 1 + dist) {
+                vis[x+1][y][0][1] = dist + 1;
+                q.push({dist + 1,x + 1, y, 0, 1});
             }
 
-
-            if(x < n - 1 && dp[x+1][y][2] > dist + 1 && adj[x+1][y] != -1) {
-                dp[x+1][y][2] = dist + 1;
-                pq.push({dist + 1, x + 1, y, 2, 0});
+            if(y < m && adj[x][y+1] != '#' && vis[x][y+1][2][1] > dist + 1) {
+                vis[x][y+1][2][1] = dist + 1;
+                q.push({dist + 1, x, y + 1, 2, 1});
             }
 
-            if(y > 0 && dp[x][y-1][3] > dist + 1 && adj[x][y-1] != -1) {
-                dp[x][y-1][3] = dist + 1;
-                pq.push({dist + 1, x, y - 1, 3, 0});
+            if(y > 1 && adj[x][y-1] != '#' && vis[x][y-1][3][1] > dist + 1) {
+                vis[x][y-1][3][1] = dist + 1;
+                q.push({dist + 1, x, y-1, 3, 1});
             }
 
-            if(y < m - 1 && dp[x][y+1][4] > dist + 1 && adj[x][y + 1] != -1) {
-                dp[x][y+1][4] = dist + 1;
-                pq.push({dist + 1, x, y + 1, 4, 0});
-            }
-        } 
-        else if(direc == 2) {
             
-            if(x < n - 1 && curr == 3 && dp[x+1][y][2] > dist + 3 && adj[x+1][y] != -1) {
-                dp[x-1][y][direc] = dist + 3;
-                pq.push({dp[x+1][y][direc], x+1, y, 2, 3});
-            } 
-            else if(x < n - 1 && dp[x+1][y][direc] > dist + 1 && adj[x+1][y] != -1) {
-                dp[x+1][y][direc] = dist + 1;
-                pq.push({dp[x+1][y][direc], x - 1, y, 2, curr + 1});
-            }
+        }
 
+        if(direc == 2) {
 
-            if(x > 0 && dp[x-1][y][1] > dist + 1 && adj[x-1][y] != -1) {
-                dp[x-1][y][1] = dist + 1;
-                pq.push({dist + 1, x - 1, y, 1, 0});
+            if(y < m && adj[x][y+1] != '#' && count < 3 && vis[x][y+1][2][count + 1] > dist + 1) {
+                vis[x][y+1][2][count + 1] = dist + 1;
+                q.push({dist + 1, x, y + 1, 2, count + 1});
             }
-
-            if(y > 0 && dp[x][y-1][3] > dist + 1 && adj[x][y-1] != -1) {
-                dp[x][y-1][3] = dist + 1;
-                pq.push({dist + 1, x, y - 1, 3, 0});
-            }
-
-            if(y < m - 1 && dp[x][y+1][4] > dist + 1 && adj[x][y + 1] != -1) {
-                dp[x][y+1][4] = dist + 1;
-                pq.push({dist + 1, x, y + 1, 4, 0});
-            }
-        } 
-        else if(direc == 3) {
             
-            if(y > 0 && curr == 3 && dp[x][y-1][direc] > dist + 3 && adj[x][y-1] != -1) {
-                dp[x][y-1][direc] = dist + 3;
-                pq.push({dp[x][y-1][direc], x, y-1, 3, 3});
-            } 
-            else if(y > 0 && dp[x][y-1][direc] > dist + 1 && adj[x][y-1] != -1) {
-                dp[x][y-1][direc] = dist + 1;
-                pq.push({dp[x][y-1][direc], x, y - 1, 3, curr + 1});
+            if(x > 1 && adj[x-1][y] != '#' && vis[x-1][y][1][1] > 1 + dist) {
+                vis[x-1][y][1][1] = dist + 1;
+                q.push({dist + 1,x - 1, y, 1, 1});
             }
 
-
-            if(x < n - 1 && dp[x+1][y][2] > dist + 1 && adj[x+1][y] != -1) {
-                dp[x+1][y][2] = dist + 1;
-                pq.push({dist + 1, x + 1, y, 2, 0});
+            if(x < n && adj[x+1][y] != '#' && vis[x+1][y][0][1] > dist + 1) {
+                vis[x+1][y][0][1] = dist + 1;
+                q.push({dist + 1, x + 1, y, 0, 1});
             }
 
-            if(x > 0 && dp[x-1][y][1] > dist + 1 && adj[x-1][y] != -1) {
-                dp[x-1][y][1] = dist + 1;
-                pq.push({dist + 1, x-1, y, 1, 0});
+            if(y > 1 && adj[x][y-1] != '#' && vis[x][y-1][3][1] > dist + 1) {
+                vis[x][y-1][3][1] = dist + 1;
+                q.push({dist + 1, x, y-1, 3, 1});
             }
 
-            if(y < m - 1 && dp[x][y+1][4] > dist + 1 && adj[x][y + 1] != -1) {
-                dp[x][y+1][4] = dist + 1;
-                pq.push({dist + 1, x, y + 1, 4, 0});
+           
+        }
+
+        if(direc == 3) {
+
+            if(y > 1 && adj[x][y-1] != '#' && count < 3 && vis[x][y-1][3][count + 1] > dist + 1) {
+                vis[x][y-1][3][count + 1] = dist + 1;
+                q.push({dist + 1, x, y - 1, 3, count + 1});
             }
-        } 
-        else if(direc == 4) {
             
-            if(y < m - 1 && curr == 3 && dp[x][y + 1][4] > dist + 3 && adj[x][y + 1] != -1) {
-                dp[x][y + 1][direc] = dist + 3;
-                pq.push({dp[x][y + 1][direc], x, y + 1, 4, 3});
-            } 
-            else if(y < m - 1 && dp[x][y + 1][direc] > dist + 1 && adj[x][y + 1] != -1) {
-                dp[x][y + 1][direc] = dist + 1;
-                pq.push({dp[x][y + 1][direc], x, y + 1, 4, curr + 1});
+            if(x > 1 && adj[x-1][y] != '#' && vis[x-1][y][1][1] > 1 + dist) {
+                vis[x-1][y][1][1] = dist + 1;
+                q.push({dist + 1,x - 1, y, 1, 1});
             }
 
-
-            if(x < n - 1 && dp[x+1][y][2] > dist + 1 && adj[x+1][y] != -1) {
-                dp[x+1][y][2] = dist + 1;
-                pq.push({dist + 1, x + 1, y, 2, 0});
+            if(y < m && adj[x][y+1] != '#' && vis[x][y+1][2][1] > dist + 1) {
+                vis[x][y+1][2][1] = dist + 1;
+                q.push({dist + 1, x, y + 1, 2, 1});
             }
 
-            if(y > 0 && dp[x][y-1][3] > dist + 1 && adj[x][y-1] != -1) {
-                dp[x][y-1][3] = dist + 1;
-                pq.push({dist + 1, x, y - 1, 3, 0});
+            if(x < n && adj[x+1][y] != '#' && vis[x+1][y][0][1] > dist + 1) {
+                vis[x+1][y][0][1] = dist + 1;
+                q.push({dist + 1, x + 1, y, 0, 1});
             }
 
-            if(x > 0 && dp[x-1][y][1] > dist + 1 && adj[x-1][y] != -1) {
-                dp[x-1][y][1] = dist + 1;
-                pq.push({dist + 1, x - 1, y, 1, 0});
-            }
-        }  
+        }
+    }
+
+    for(int i = 0; i <= 3; i++) {
+        for(int j = 1; j <= 3; j++) ans = min(ans, vis[end_x][end_y][i][j]);
     }
 }
 
+
+
 int main() {
-    
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+        int n,m;
         cin >> n >> m;
-        dp.assign(n, vector<vector<long long>>(m, vector<long long>(5, INT_MAX)));
 
-        vector<vector<int>> adj(n, vector<int>(m, -1));
+        ans = INT_MAX;
 
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < m; j++) {
-                char c;
-                cin >> c;
+        vector<vector<char>> adj(n + 1, vector<char>(m + 1));
 
-                if(c == 'S') {
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= m; j++) {
+                cin >> adj[i][j];
+
+                if(adj[i][j] == 'S') {
                     start_x = i;
                     start_y = j;
                 }
-                if(c == 'T') {
+
+                if(adj[i][j] == 'T') {
                     end_x = i;
                     end_y = j;
                 }
-
-                if(c == '.' || c == 'S' || c == 'T') adj[i][j] = 1;
             }
         }
 
-        // int ans = min(dfs(adj, start_x, start_y, -2, 0), min(dfs(adj, start_x, start_y, 2, 0), min(dfs(adj, start_x, start_y, 1, 0),dfs(adj, start_x, start_y, -1, 0))));
-
-        dfs(adj);
-
-        long long ans = min(dp[end_x][end_y][1] , min(dp[end_x][end_y][2], min(dp[end_x][end_y][3], dp[end_x][end_y][4]))); 
+        bfs(adj);
 
         if(ans == INT_MAX) cout << -1 << '\n';
         else cout << ans << '\n';
+
+
     
+    return 0;
 }
