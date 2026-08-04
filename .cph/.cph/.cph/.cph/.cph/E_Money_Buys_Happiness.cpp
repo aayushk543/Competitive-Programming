@@ -1,19 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-vector<vector<long long>> memo;
-
-long long f(vector<vector<long long>>& h, int index, long long curr, long long x) {
-    int m = h.size();
-    if(index == m) return memo[curr][index] = 0;
-
-    if(memo[curr][index] != -1) return memo[curr][index];
-
-    if(h[index][0] <= curr) return memo[curr][index] = max(h[index][1] + f(h, index + 1, curr + x - h[index][0], x), f(h, index + 1, curr + x, x));
-
-    return memo[curr][index] = f(h, index + 1, curr + x, x);
-}
-
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -34,14 +21,42 @@ int main() {
         long long m1, m2;
         cin >> m1 >> m2;
 
-        sum += m1;
+        sum += m2;
 
         h[i] = {m1, m2};
        }
 
-       memo.assign(sum + 1, vector<long long>(m + 1, -1));
+       vector<vector<long long>> dp(m + 1, vector<long long>(sum + 1, LLONG_MAX));
 
-       cout << f(h, 0, 0, x) << '\n';
+       dp[0][0] = 0;
+
+       for(int i = 1; i <= m; i++) {
+
+        long long m1 = h[i-1][0];
+        long long m2 = h[i-1][1];
+
+        for(int j = 0; j <= sum; j++) {
+
+            dp[i][j] = dp[i-1][j];
+
+            if(j >= m2 && dp[i-1][j - m2] != LLONG_MAX && dp[i-1][j - m2] + m1 <= (i - 1)*x) {
+                dp[i][j] = min(dp[i][j], dp[i-1][j-m2] + m1);
+            }
+        }
+       }
+
+       long long ans = 0;
+
+       for(int i = sum; i >= 0; i--) {
+        if(dp[m][i] != LLONG_MAX) {
+            ans = i;
+            break;
+        }
+       }
+
+       cout << ans << '\n';
+
+       
     }
     return 0;
 }   
