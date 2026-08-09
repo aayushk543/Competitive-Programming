@@ -37,6 +37,7 @@ int main() {
         cin >> n >> m;
 
         vector<vector<vector<long long>>> adj(n + 1);
+        vector<vector<vector<long long>>> adj2(n + 1);
 
         for(int i = 1; i <= m; i++) {
             long long u,v,w;
@@ -44,19 +45,19 @@ int main() {
             cin >> u >> v >> w;
 
             adj[u].push_back({v, w});
+            adj2[v].push_back({u, w});
         }
 
         vector<long long> vis1 = dij(adj, 1);
-        vector<long long> vis2 = dij(adj, n);
+        vector<long long> vis2 = dij(adj2, n);
 
-        long long ans = LLONG_MAX;
 
-        for(int i = 1; i <= n; i++) {
-            if(vis1[i] == LLONG_MAX || vis2[i] == LLONG_MAX) continue;
-            ans = min(ans, vis1[i] + vis2[i]);
+        for(int i = 2; i <= n; i++) {
+            if(vis1[i] == LLONG_MAX && vis2[i] == LLONG_MAX) cout << -1 << " ";
+            else cout << min(vis1[i], vis2[i]) << " ";
         }
 
-        cout << ans << '\n';
+        cout << '\n';
 
     return 0;
 }   
