@@ -8,25 +8,29 @@ int main() {
     int t;
     cin >> t;
     while(t--) {
-        int n, a, b;
+        int n,a,b;
         cin >> n >> a >> b;
 
-        vector<long long> vec(n + 1, 0);
-        vector<long long> prefix(n + 1, 0);
+        vector<long long> arr(n + 1, 0);
+        long long pre = 0;
 
         for(int i = 1; i <= n; i++) {
-            cin >> vec[i];
-            prefix[i] = vec[i];
-            if(i > 0) prefix[i] += prefix[i-1];
+            cin >> arr[i];
+            pre += arr[i];
         }
 
-        long long ans = b*(prefix[n]);
+        long long ans = b * pre;
 
         for(int i = 1; i <= n; i++) {
-            ans = min(ans, (prefix[i] - prefix[i-1])*(a+b) + b*((n - i + 1)*prefix[i]));
+            pre -= (arr[i] - arr[i-1]) * (n + 1 - i);
+            long long cost = (a + b) * (arr[i]) + b * (pre);
+
+            ans = min(ans, cost);
         }
 
         cout << ans << '\n';
+
+
     }
     return 0;
 }
