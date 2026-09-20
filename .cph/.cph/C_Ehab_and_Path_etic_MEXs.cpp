@@ -12,42 +12,36 @@ int main() {
         int n;
         cin >> n;
 
-        vector<vector<int>> adj(n + 1);
-        map<pair<int,int>, int> mp;
+        vector<vector<pair<int,int>>> adj(n + 1);
 
-        for(int i = 1; i <= n - 1; i++) {
+        for(int i = 0; i < n - 1; i++) {
             int u,v;
             cin >> u >> v;
 
-            mp[{u, v}] = i - 1;
-
-            adj[u].push_back(v);
-            adj[v].push_back(u);
+            adj[u].push_back({u, i});
+            adj[v].push_back({v, i});
         }
 
-        int count = 0;
+        int curr = 0;
+        vector<int> ans(n - 1, -1);
 
-        queue<int> q;
+        for(int i = 1; i <= n; i++) {
 
-        q.push(1);
-
-        vector<int> ans(n - 1, 0);
-
-        while(!q.empty()) {
-            int node = q.front();
-            q.pop();
-
-            for(int i = 0; i < adj[node].size(); i++) {
-
-                if(mp.find({node, adj[node][i]}) != mp.end()) {
-                    ans[mp[{node, adj[node][i]}]] = count++;
-                }
-                else {
-                    ans[mp[{adj[node][i], node}]] = count++;
-                }
+            if(adj[i].size() >= 3) {
+                
+                ans[adj[i][0].second] = 0;
+                ans[adj[i][1].second] = 1;
+                ans[adj[i][2].second] = 2;
+                curr = 3;
+                break;
             }
         }
 
-        for(int i = 0; i < n - 1; i++) cout << ans[i] << '\n';
+        for(int i = 0; i < n - 1; i++) {
+
+            if(ans[i] == -1) cout << curr++ << '\n';
+            else cout << ans[i] << '\n';
+        }
+        
     }
 }
