@@ -16,10 +16,8 @@ int main() {
 
     sort(arr.begin(), arr.end());
 
-    for(int i = 0; i < n - 1; i++) {
-
-        arr[i+1] -= arr[i];
-
+    for(int i = 0; i < n; i++) {
+        
     }
 
     if(arr[n-1] > 0) cout << "NO" << '\n';

@@ -38,7 +38,6 @@ int main() {
 
                 int curr = 0;
 
-                //cout << i << '\n';
 
                 while(arr[i] >= prev) {
 

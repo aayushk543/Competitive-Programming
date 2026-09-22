@@ -56,10 +56,12 @@ int main() {
 
                         while(now % i == 0) {
                             now /= i;
-                            count += 1;
+                            mp[i] += 1;
                         }
                     }
                 }
+
+                
 
 
 
