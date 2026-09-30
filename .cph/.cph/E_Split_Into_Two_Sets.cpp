@@ -11,30 +11,54 @@ int main() {
        int n;
        cin >> n;
 
-       vector<int> v1(n + 1, 0);
-       vector<int> v2(n + 1, 0);
+       vector<vector<int>> adj(n + 1);
+       vector<int> vis(n + 1, -1);
+       vector<int> deg(n + 1, 0);
 
        bool flag = true;
 
-       for(int i = 1; i <= n; i++) {
-        int m1, m2;
-        cin >> m1 >> m2;
+       for(int i = 0; i < n; i++) {
+        int u,v;
+        cin >> u >> v;
 
-        if(m1 == m2) flag = false;
-        else if(v2[m1] == 0 && v2[m2] == 0) {
-            v2[m1] = 1;
-            v2[m2] = 1;
-        }
-        else if(v1[m1] == 0 && v1[m2] == 0) {
-            v1[m1] = 1;
-            v1[m2] = 1;
-        }
-        else flag = false;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+
+        deg[u]++; 
+        deg[v]++;
+
+        if(deg[u] > 2 || deg[v] > 2) flag = false;
 
        }
 
        for(int i = 1; i <= n; i++) {
-        if(v1[i] == 0 || v2[i] == 0) flag = false;
+
+        if(vis[i] == -1) {
+            queue<int> q;
+            q.push(i);
+            vis[i] = 1;
+
+            while(!q.empty()) {
+                int x = q.front();
+                q.pop();
+
+                for(int i = 0; i < adj[x].size(); i++) {
+
+                    if(vis[adj[x][i]] == -1) {
+
+                        if(vis[x] == 1) vis[adj[x][i]] = 2;
+                        else vis[adj[x][i]] = 1; 
+
+                        q.push(adj[x][i]);
+                    }
+                    else if(vis[x] == vis[adj[x][i]]) {
+                        flag = false;
+                        break;
+                    }
+
+                }
+            }
+        }
        }
 
        if(flag) cout << "YES" << '\n';
