@@ -1,18 +1,18 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int dfs(vector<vector<int>>& adj, vector<int>& dist, vector<int>& h, vector<int>& vis, int index, int curr) {
+int dfs(vector<vector<int>>& adj, vector<vector<int>>& dist, vector<int>& h, vector<int>& vis, int index, int curr) {
     vis[index] = 1;
+    int count = 0;
 
     for(int i = 0; i < adj[index].size(); i++) {
         if(vis[adj[index][i]] == -1) {
-            dist[index] += dfs(adj, dist, h, vis, adj[index][i], curr);
+            count += dfs(adj, dist, h, vis, adj[index][i], curr);
+            dist[index].push_back({dfs(adj, dist, h, vis, adj[index][i], curr), adj[index][i]});
         }
     }
 
-    h[curr] += dist[index];
-
-    return 1 + dist[index];
+    return 1 + count;
 }
 
 void dfs2(vector<vector<int>>& adj, vector<int>& dist, int index, int curr) {
@@ -60,9 +60,15 @@ int main() {
         dfs2(adj, dist2, 1, 0);
 
         int sum = 0;
+        int prev = 0;
+        int ans = INT_MAX;
 
-        map<int, int> mp;
+        for(int i = 0; i <= n; i++) {
 
+            ans = min(ans, h[i] - prev);
+            prev += dist2[i];
+        }
 
+        cout << ans << '\n';
     }
 }
