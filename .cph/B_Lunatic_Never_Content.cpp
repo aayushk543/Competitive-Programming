@@ -17,11 +17,16 @@ int main() {
 
        long long ans = INT_MAX;
 
-       for(int i = 0; i < n/2; i++) {
-        if(arr[i] != arr[n - i - 1]) ans = min(ans, max(arr[i], (arr[n - i - 1])) - min(arr[i], (arr[n - i - 1])));
+       for(int i = 0; i < n; i++) {
+        if(arr[i] == arr[n - i - 1]) continue;
+
+        if(ans == INT_MAX) ans = max(arr[i], arr[n - i - 1]) - min(arr[i], arr[n - i - 1]);
+        else ans = gcd(ans, max(arr[i], arr[n - i - 1]) - min(arr[i], arr[n - i - 1]));
        }
 
-       if(ans == INT_MAX) cout << 0 << '\n';
+       if(ans == INT_MAX) {
+        cout << 0 << '\n';
+       }
        else cout << ans << '\n';
 
     }
