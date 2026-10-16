@@ -1,12 +1,14 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+int mod = 998244353;
+
 long long factorial(int n) {
 
     long long ans = 1;
 
     while(n > 0) {
-        ans *= n;
+        ans = (ans*n) % mod;
         n -= 1;
     }
 
@@ -19,7 +21,7 @@ long long f1(int n) {
 
     long long ans = 1;
 
-    for(int i = 1; i <= (n / 4); i += 2) ans *= (n - i);
+    for(int i = 1; i <= (n / 4); i += 2) ans = (ans * (n - i)) % mod;
 
     return ans;
 }
@@ -27,9 +29,11 @@ long long f1(int n) {
 
 long long calculate(int n) {
 
+    if(n < 100) return (factorial(n) / (factorial(n/2) * factorial(n/2)));
+
     long long ans = (f1(n)) / (factorial(n / 4));
 
-    for(int i = 1; i <= (n / 4); i++) ans *= 2;
+    for(int i = 1; i <= (n / 4); i++) ans = (ans*2) % mod;
 
     return ans;
 
@@ -45,7 +49,7 @@ int main() {
 
        vector<int> edges(n);
 
-       int ans = 1;
+       long long ans = 1;
 
        for(int i = 1; i <= (n / 3); i++) {
         int a,b,c;
@@ -92,13 +96,13 @@ int main() {
         }
 
         if(num1 == num2) {
-            if(num2 == num3) ans *= 3;
+            if(num2 == num3) ans = (ans*3) % mod;
             else {
                 ans *= 1;
             }
         }
         else {
-            if(num2 == num3) ans *= 2;
+            if(num2 == num3) ans = (ans*2) % mod;
             else ans *= 1;
         }
        }
