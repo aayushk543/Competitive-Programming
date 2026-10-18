@@ -42,9 +42,13 @@ int main() {
 
         int ans = 0;
 
-        if(sol.size() > 0) {
+        if(sol.size() > 2) {
             ans = sol[sol.size() - 1] - sol[0];
             cout << ans << '\n';
+        }
+        else if(sol.size() > 0) {
+            ans = sol[sol.size() - 1] - sol[0];
+            cout << min(ans, 1) << '\n';
         }
         else cout << 0 << '\n';
     }
