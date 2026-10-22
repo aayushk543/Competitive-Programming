@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int num9(vector<int>& n) {
+long long num9(vector<int>& n) {
     
     long long curr = 0;
     
@@ -15,7 +15,7 @@ int num9(vector<int>& n) {
     return curr;
 }
 
-int f1(long long n, int d) {
+long long f1(long long n, int d) {
 
     //cout << "hi" << '\n';
     
@@ -23,6 +23,7 @@ int f1(long long n, int d) {
     bool flag = false;
     
     vector<int> num;
+    vector<int> vis;
     
     while(curr > 0) {
         int ld = curr % 10;
@@ -30,12 +31,32 @@ int f1(long long n, int d) {
         if(ld == 9) {
             
             num.push_back(0);
+            vis.push_back(0);
             
             flag = true;
         }
+        else if(ld == 8) {
+
+            if(flag) {
+                num.push_back(0);
+                vis.push_back(0);
+            }
+            else {
+                num.push_back(8);
+                vis.push_back(1);
+
+                flag = false;
+            }
+        }
         else {
-            if(flag) num.push_back(ld + 1);
-            else num.push_back(ld);
+            if(flag) {
+                num.push_back(ld+1);
+                vis.push_back(1);
+            }
+            else {
+                num.push_back(ld);
+                vis.push_back(0);
+            }
 
             flag = false;
         }
@@ -57,12 +78,21 @@ int f1(long long n, int d) {
             }
         }
     }
+    else {
+
+        for(int i = num.size() - 1; i >= 0; i--) {
+            if(num[i] != 9 && vis[i] == 1) {
+                i--;
+                while(i >= 0) num[i--] = 0;
+            }
+        }
+    }
     //std::reverse(num.begin(), num.end());
     
     return num9(num);
 }
 
-int f2(long long n, int d) {
+long long f2(long long n, int d) {
     
     long long curr = n;
     bool flag = false;
@@ -79,13 +109,17 @@ int f2(long long n, int d) {
     
     for(int i = num.size() - 1; i >= 0; i--) {
         
-        if(num[i] == d && d != 0) {
+        if(num[i] == d) {
             
             num[i] = d + 1;
             i--;
-            while(i >= 0) num[i--] = 0; 
+
+            if(d == 0) while(i >= 0) num[i--] = 1;
+            else {
+                while(i >= 0) num[i--] = 0; 
+            }
         }
-        else if(num[i] == d && d == 0) num[i] = 1;
+        //else if(num[i] == d && d == 0) num[i] = 1;
     }
     //std::reverse(num.begin(), num.end());
     
