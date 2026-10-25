@@ -29,7 +29,7 @@ int main() {
        for(int i = 1; i < n; i++) cin >> a[i];
        for(int i = 0; i < n; i++) cin >> b[i];
 
-       for(int i = 0; i < m; i++) a[i] = i + 1;
+       a[0] = m;
 
        sort(a.begin(), a.end());
        sort(b.begin(), b.end());
