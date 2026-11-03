@@ -1,24 +1,18 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-long long dfs(int index, vector<vector<int>>& adj, vector<long long>& dist, int so_far, vector<int>& vis, vector<int>& vis2, vector<long long>& vis3) {
-    long long curr = 0;
-    vis[index] = 1;
+int dfs(int index, vector<vector<int>>& adj, vector<int>& dist, int depth, vector<int>& dp) {
+    dist[index] = depth;
+    int curr = depth;
 
     for(int i = 0; i < adj[index].size(); i++) {
-        if(vis[adj[index][i]] == -1) {
-            long long now = dfs(adj[index][i], adj, dist, so_far + 1, vis, vis2, vis3);
-
-            curr += now;
-
-            vis3[so_far + now] += now;
+        if(dist[adj[index][i]] == -1) {
+            curr = max(curr, dfs(adj[index][i], adj, dist, depth + 1, dp));
         }
     }
 
-    vis2[so_far] = 1;
-    dist[so_far] += curr;
-
-    return curr + 1;
+    dp[index] = curr;
+    return curr;
 }
 
 int main() {
@@ -41,37 +35,28 @@ int main() {
             adj[v].push_back(u);
         }
 
-        vector<long long> dist(n + 1);
-        vector<int> vis(n + 1, -1);
-        vector<int> vis2(n + 1, -1);
-        vector<long long> vis3(n + 1);
+        vector<int> dist(n + 1, -1);
+        vector<int> dp(n + 1);
 
-        dfs(1, adj, dist, 0, vis, vis2, vis3);
+        int max_depth = dfs(1, adj, dist, 1, dp);
 
-        int ans = -1;
-        long long curr = LLONG_MAX;
-
-        long long sum = 0;
-
-        for(int i = 0; i < n; i++) {
-            vis3[i + 1] += vis3[i];
-        }
+        vector<int> diff(max_depth + 2, 0);
 
         for(int i = 1; i <= n; i++) {
-
-            if(vis2[i] == 1) {
-
-                if(dist[i] + vis3[i] - 1 < curr) {
-
-                    cout << i << " " << dist[i] << " " << vis3[i] - 1 << '\n';
-                    curr = dist[i] + vis3[i] - 1;
-                    ans = i;
-                }
-            }
+            diff[dist[i]]++;
+            diff[dp[i] + 1]--;
         }
 
-        cout << curr << '\n';
+        int curr = 0, maxi = 0;
 
+        for(int i = 1; i <= max_depth; i++) cout << diff[i] << " ";
+
+        for(int i = 1; i <= max_depth; i++) {
+            curr += diff[i];
+            maxi = max(maxi, curr);
+        }
+
+        cout << n - maxi << '\n';
     }
     return 0;
 }
