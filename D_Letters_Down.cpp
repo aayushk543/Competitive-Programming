@@ -1,42 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-pair<int,int> dfs(vector<vector<int>>& adj, int index, vector<int>& vis, vector<int>& st) {
-    vis[index] = 1;
-    int curr = index;
-    int curr2 = index;
-
-    st.push_back(index);
-
-
-    for(int i = 0; i < adj[index].size(); i++) {
-        int node = adj[index][i];
-
-        if(vis[node] == -1) {
-            curr = min(curr, dfs(adj, node, vis, st).first);
-            curr2 = max(curr2, dfs(adj, node, vis, st).second);
-        }
-    }
-
-    return {curr, curr2};
-}
-
-long long cal(vector<vector<int>>& adj, int index, vector<int>& vis) {
-    vector<int> st;
-    long long ans = 0;
-
-    vector<int> vis2(26, -1);
-    pair<int,int> p = dfs(adj, index, vis2, st);
-
-    for()
-
-    for(int i = 0; i < st.size(); i++) {
-        ans += st[i] - curr;
-    }
-
-    return ans;
-}
-
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -50,44 +14,41 @@ int main() {
         string s;
         cin >> s;
 
-        bool flag = true;
+        vector<int> freq(26, 0);
 
-        for(int i = 0; i < n / 2; i++) {
-            if(s[i] != s[n-i-1]) {
-                flag = false;
-                break;
-            }
-        }
+        for(int i = 0; i < n/2; i++) {
+            int j = n - i - 1;
 
-        if(flag) cout << 0 << '\n';
-        else {
-            vector<int> freq(26, 0);
+            if(s[i] != s[j]) {
+                int curr1 = min(s[i] - 'a', s[j] - 'a');
+                int curr2 = max(s[i] - 'a', s[j] - 'a');
 
-            for(int i = 0; i < n; i++) freq[s[i] - 'a']++;
-
-            int ch;
-            long long ans = 0;
-
-            vector<vector<int>> adj(26, vector<int>());
-
-            for(int i = 0; i < n / 2; i++) {
-                if(s[i] == s[n-i-1]) continue;
-
-                adj[s[i] - 'a'].push_back(s[n-i-1] - 'a');
-                adj[s[n-i-1] - 'a'].push_back(s[i] - 'a');
-            }
-
-            vector<int> vis(26, -1);
-
-            for(int i = 0; i < 26; i++) {
-
-                if(adj[i].size() > 0) {
-                    ans += cal(adj, i, vis);
+                for(int index = curr1; index < curr2; index++) {
+                    freq[index]++;
                 }
             }
-
-            cout << ans << '\n';
         }
+
+        int ans = 0;
+
+        for(int i = 0; i < 26; i++) {
+            int maxi = -1, mini = -1;
+
+            if(freq[i] == 0) continue;
+
+            int j = i;
+
+            while(i < 26 && freq[i] > 0) {
+                maxi = i;
+                if(mini == -1) mini = i;
+
+                i++;
+            }
+
+            ans += (maxi - mini + 1);
+        }
+
+        cout << ans << '\n';
     }
     return 0;
 }
