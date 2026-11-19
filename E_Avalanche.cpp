@@ -15,7 +15,17 @@ int main() {
 
         for(int i = 0; i < n; i++) cin >> arr[i];
 
-        
+        long long sum = 0;
+
+        for(int i = 0; i < n; i++) sum += arr[i];
+
+        if(sum % 2 == 0 && k % 4 == 0) cout << "Bob" << '\n';
+        else if(sum % 2 == 0 && k % 2 == 0) cout << "Alice" << '\n';
+        else if(sum % 2 == 1 && k % 4 == 0) cout << "Alice" << '\n';
+        else if(sum % 2 == 1 && k % 2 == 0) cout << "Bob" << '\n';
+        else {
+            cout << "ok" << '\n';
+        }
     }
     return 0;
 }
