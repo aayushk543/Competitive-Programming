@@ -66,91 +66,61 @@ int main() {
             for(int j = 1; j <= m; j++) cin >> mat[i][j];
         }
 
-        int maxi = -1;
+        int mini = 101, index1 = -1;
+        int count_mini = 0;
+        
+        for(int i = 1; i <= n; i++) {
+
+            int count = 0;
+
+            for(int j = 1; j <= m; j++) {
+
+                if(mini > mat[i][j]) {
+                    mini = mat[i][j];
+                    index1 = i;
+                    count = 1;
+                }
+                else if(mini == mat[i][j]) count++;
+            }
+        }
+
+        mini = 101;
+        int index2 = -1;
+
+        for(int i = 1; i <= m; i++) {
+
+            for(int j = 1; j <= n; j++) {
+
+                if(j == index1) {
+
+                    if(mini > mat[j][i] - 1) {
+                        mini = mat[j][i] - 1;
+                        index2 = i;
+                    }
+                }
+                else {
+                    if(mini > mat[j][i]) {
+                        mini = mat[j][i];
+                        index2 = i;
+                    }
+                }
+            }
+        }
+
+        for(int i = 1; i <= n; i++) mat[i][index2] -= 1;
+        for(int i = 1; i <= m; i++) {
+            if(i == index2) continue;
+
+            mat[index1][i] -= 1;
+        }
+
+        int maxi = 0;
 
         for(int i = 1; i <= n; i++) {
             for(int j = 1; j <= m; j++) maxi = max(maxi, mat[i][j]);
         }
 
-        vector<int> vis_r(n + 1, 0);
-        vector<int> vis_c(m + 1, 0);
-
-        int index1 = 0, index2 = 0;
-
-        for(int i = 1; i <= n; i++) {
-            for(int j = 1; j <= m; j++) {
-                if(mat[i][j] == maxi) {
-                    vis_r[i]++;
-                    vis_c[j]++;
-
-                    index1 = i;
-                    index2 = j;
-                }
-            }
-        }
-
-        int c = 0, r = 0;
-
-        for(int i = 1; i <= n; i++) {
-            if(vis_r[i] > 1) {
-                r++;
-                index1 = i;
-            }
-        }
-
-        for(int i = 1; i <= m; i++) {
-            if(vis_c[i] > 1) {
-                c++;
-                index2 = i;
-            }
-        }
-
-        if(r > 1 || c > 1) {
-            cout << maxi << '\n';
-        }
-        else if((r == 1 && c == 1) || (r == 0 && c == 0)) {
-
-            for(int i = 1; i <= n; i++){
-                mat[i][index2]--;
-            }
-
-            for(int i = 1; i <= m; i++) {
-                if(i == index2) continue;
-                mat[index1][i]--;
-            }
-
-
-        }
-        else {
-            if(r == 1) {
-                for(int i = 1; i <= m; i++) {
-                    mat[index1][i]--;
-                }
-
-                vector<int> maxi_col;
-
-                for(int i = 1; i <= m; i++) {
-                    int curr = mat[0][i];
-
-                    for(int j = 1; j <= n; j++) {
-                        curr = max(curr, mat[j][i]);
-                    }
-
-                    maxi_col.push_back(curr);
-                }
-
-                sort(maxi_col.begin(), maxi_col.end());
-            }
-            if(c == 1) {
-                for(int i = 1; i <= n; i++) {
-                    mat[i][index2]--;
-                }
-            }
-
-            
-
-        }
-
+        cout << maxi << '\n';
     }
     return 0;
 }
